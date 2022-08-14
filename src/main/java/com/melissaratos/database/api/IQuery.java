@@ -6,15 +6,11 @@ import java.util.List;
 
 public interface IQuery {
 
-    IQuery insertInto(String[] columns, String[] values);
-
-    IQuery insertInto(String[] columns, String[]... values);
+    IQuery insertInto(String[] columns, String... values);
 
     IQuery insertInto(String[] columns, List<String> values);
 
-    IQuery insertInto(List<String> columns, String[] values);
-
-    IQuery insertInto(List<String> columns, String[]... values);
+    IQuery insertInto(List<String> columns, String... values);
 
     IQuery insertInto(List<String> columns, List<String> values);
 
@@ -22,9 +18,15 @@ public interface IQuery {
 
     IQuery select(List<String> columns);
 
-    IQuery update(String... columns);
+    IQuery update(String[] columns, String... values);
 
-    IQuery update(List<String> columns);
+    IQuery update(String[] columns, List<String> values);
+
+    IQuery update(List<String> columns, String... values);
+
+    IQuery update(List<String> columns, List<String> values);
+
+    IQuery delete();
 
     IQuery join(String table, String condition);
 
@@ -44,6 +46,8 @@ public interface IQuery {
 
     IQuery where(String key, WhereCondition condition, IQuery iQuery);
 
+    IQuery where(Logic logic, String where);
+
     IQuery where(Logic logic, String key, String condition, String value);
 
     IQuery where(Logic logic, String key, WhereCondition condition, String value);
@@ -61,6 +65,8 @@ public interface IQuery {
     IQuery having(String key, String condition, IQuery iQuery);
 
     IQuery having(String key, WhereCondition condition, IQuery iQuery);
+
+    IQuery having(Logic logic, String having);
 
     IQuery having(Logic logic, String key, String condition, String value);
 
@@ -94,9 +100,12 @@ public interface IQuery {
     enum WhereCondition {
         IS,
         IS_NOT,
+        IS_NULL,
         IN,
         NOT_IN,
-        LIKE;
+        NOT_EXISTS,
+        LIKE,
+        ALL;
 
         @Override
         public String toString() {
