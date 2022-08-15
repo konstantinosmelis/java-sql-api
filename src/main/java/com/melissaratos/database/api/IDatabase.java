@@ -1,5 +1,8 @@
 package com.melissaratos.database.api;
 
+import com.melissaratos.database.api.exception.MissingAnnotationException;
+import com.melissaratos.database.api.exception.MissingPrimaryKeyException;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,9 +19,13 @@ public interface IDatabase {
 
     IQuery query(String table, String alias);
 
-    ResultSet getResultSet(IQuery iQuery, Object... objects) throws SQLException;
+    ResultSet getResult(IQuery iQuery, Object... objects) throws SQLException;
 
     void execute(IQuery iQuery, Object... objects) throws SQLException;
 
     IDatabase close(ResultSet resultSet) throws SQLException;
+
+    <T> void update(T table) throws MissingAnnotationException, IllegalAccessException, SQLException;
+
+    <T> void build(T table) throws MissingAnnotationException, MissingPrimaryKeyException, SQLException;
 }

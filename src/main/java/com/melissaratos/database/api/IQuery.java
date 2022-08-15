@@ -6,27 +6,51 @@ import java.util.List;
 
 public interface IQuery {
 
-    IQuery insertInto(String[] columns, String... values);
+    IQuery insertInto(String[] columns, Object... values);
 
-    IQuery insertInto(String[] columns, List<String> values);
+    IQuery insertInto(String[] columns, List<Object> values);
 
-    IQuery insertInto(List<String> columns, String... values);
+    IQuery insertInto(List<String> columns, Object... values);
 
-    IQuery insertInto(List<String> columns, List<String> values);
+    IQuery insertInto(List<String> columns, List<Object> values);
 
     IQuery select(String... columns);
 
     IQuery select(List<String> columns);
 
-    IQuery update(String[] columns, String... values);
+    IQuery update(String[] columns, Object... values);
 
-    IQuery update(String[] columns, List<String> values);
+    IQuery update(String[] columns, List<Object> values);
 
-    IQuery update(List<String> columns, String... values);
+    IQuery update(List<String> columns, Object... values);
 
-    IQuery update(List<String> columns, List<String> values);
+    IQuery update(List<String> columns, List<Object> values);
 
     IQuery delete();
+
+    IQuery create(String[] columns, String... primaryKey);
+
+    IQuery create(String[] columns, List<String> primaryKey);
+
+    IQuery create(String[] columns, String[] types, String... primaryKey);
+
+    IQuery create(String[] columns, String[] types, List<String> primaryKey);
+
+    IQuery create(String[] columns, List<String> types, String... primaryKey);
+
+    IQuery create(String[] columns, List<String> types, List<String> primaryKey);
+
+    IQuery create(List<String>  columns, String... primaryKey);
+
+    IQuery create(List<String> columns, List<String> primaryKey);
+
+    IQuery create(List<String> columns, String[] types, String... primaryKey);
+
+    IQuery create(List<String> columns, List<String> types, String... primaryKey);
+
+    IQuery create(List<String> columns, String[] types, List<String> primaryKey);
+
+    IQuery create(List<String> columns, List<String> types, List<String> primaryKey);
 
     IQuery join(String table, String condition);
 
@@ -38,19 +62,21 @@ public interface IQuery {
 
     IQuery where(String where);
 
-    IQuery where(String key, String condition, String value);
+    IQuery where(String key, String condition, Object value);
 
-    IQuery where(String key, WhereCondition condition, String value);
+    IQuery where(String key, WhereCondition condition, Object value);
 
     IQuery where(String key, String condition, IQuery iQuery);
 
     IQuery where(String key, WhereCondition condition, IQuery iQuery);
 
+    IQuery where(WhereCondition condition, IQuery iQuery);
+
     IQuery where(Logic logic, String where);
 
-    IQuery where(Logic logic, String key, String condition, String value);
+    IQuery where(Logic logic, String key, String condition, Object value);
 
-    IQuery where(Logic logic, String key, WhereCondition condition, String value);
+    IQuery where(Logic logic, String key, WhereCondition condition, Object value);
 
     IQuery where(Logic logic, String key, String condition, IQuery iQuery);
 
@@ -58,9 +84,9 @@ public interface IQuery {
 
     IQuery having(String having);
 
-    IQuery having(String key, String condition, String value);
+    IQuery having(String key, String condition, Object value);
 
-    IQuery having(String key, WhereCondition condition, String value);
+    IQuery having(String key, WhereCondition condition, Object value);
 
     IQuery having(String key, String condition, IQuery iQuery);
 
@@ -68,9 +94,9 @@ public interface IQuery {
 
     IQuery having(Logic logic, String having);
 
-    IQuery having(Logic logic, String key, String condition, String value);
+    IQuery having(Logic logic, String key, String condition, Object value);
 
-    IQuery having(Logic logic, String key, WhereCondition condition, String value);
+    IQuery having(Logic logic, String key, WhereCondition condition, Object value);
 
     IQuery having(Logic logic, String key, String condition, IQuery iQuery);
 
