@@ -137,7 +137,7 @@ public class Database implements IDatabase {
                 Column column = field.getAnnotation(Column.class);
                 String fieldName = (column.name().equals("") ? field.getName() : column.name());
                 columns.add(fieldName);
-                types.add(column.type());
+                types.add(String.format("%s %s %s", column.type(), (column.nullable() ? "" : "NOT NULL"), (column.autoincrement() ? "AUTO_INCREMENT" : "")));
                 if(column.key() == Column.Key.PRIMARY)
                     primaryKey.add(fieldName);
             }
