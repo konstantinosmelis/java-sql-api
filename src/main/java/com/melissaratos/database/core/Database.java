@@ -150,4 +150,24 @@ public class Database implements IDatabase {
 
         this.execute(createQuery);
     }
+
+    @Override
+    public <T> void insert(T table) throws MissingAnnotationException, IllegalAccessException, SQLException {
+        if(!table.getClass().isAnnotationPresent(Table.class))
+            throw new MissingAnnotationException("The class " + table.getClass().getSimpleName() + " is missing the annotation @Table");
+
+        IQuery insertQuery = new Query(this, (table.getClass().getAnnotation(Table.class).name().equals("") ? table.getClass().getSimpleName() : table.getClass().getAnnotation(Table.class).name()));
+        List<String> columns = new ArrayList<>();
+        List<Object> values = new ArrayList<>();
+        for(Field field : table.getClass().getDeclaredFields()) {
+            if(field.isAnnotationPresent(Column.class)) {
+                Column column = field.getAnnotation(Column.class);
+                columns.add((column.name().equals("") ? field.getName() : column.name()));
+                values.add(field.get(table));
+            }
+        }
+        insertQuery.insertInto(columns, values);
+
+        this.execute(insertQuery);
+    }
 }

@@ -34,7 +34,7 @@ public class Query implements IQuery {
     public IQuery insertInto(String[] columns, Object... values) throws IllegalCallerException {
         if(!this.queryIsEmpty())
             throw new IllegalCallerException();
-        String vals = Arrays.stream(values).map(obj -> (obj instanceof String ? String.format("'%s'", obj) : String.valueOf(obj))).collect(Collectors.joining(","));
+        String vals = Arrays.stream(values).map(obj -> (obj instanceof String ? String.format("'%s'", obj) : String.valueOf(obj))).collect(Collectors.joining(", "));
         this.insert = "INSERT INTO " + this.table + " (" + String.join(",", columns) + ") VALUES (" + vals + ")";
         return this;
     }

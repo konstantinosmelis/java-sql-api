@@ -28,4 +28,6 @@ public interface IDatabase {
     <T> void update(T table) throws MissingAnnotationException, IllegalAccessException, SQLException;
 
     <T> void build(T table) throws MissingAnnotationException, MissingPrimaryKeyException, SQLException;
+
+    <T> void insert(T table) throws MissingAnnotationException, IllegalAccessException, SQLException;
 }
