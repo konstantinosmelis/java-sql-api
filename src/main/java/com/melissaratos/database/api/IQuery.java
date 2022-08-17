@@ -112,7 +112,7 @@ public interface IQuery {
 
     IQuery limit(int count, int offset);
 
-    ResultSet getResultSet(Object... objects) throws SQLException;
+    ResultSet getResult(Object... objects) throws SQLException;
 
     void execute(Object... objects) throws SQLException;
 

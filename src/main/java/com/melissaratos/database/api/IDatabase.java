@@ -6,6 +6,7 @@ import com.melissaratos.database.api.exception.MissingPrimaryKeyException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public interface IDatabase {
 
@@ -21,7 +22,7 @@ public interface IDatabase {
 
     ResultSet getResult(IQuery iQuery, Object... objects) throws SQLException;
 
-    void execute(IQuery iQuery, Object... objects) throws SQLException;
+    Statement execute(IQuery iQuery, Object... objects) throws SQLException;
 
     IDatabase close(ResultSet resultSet) throws SQLException;
 

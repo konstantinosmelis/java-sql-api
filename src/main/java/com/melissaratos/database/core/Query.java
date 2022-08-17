@@ -338,7 +338,7 @@ public class Query implements IQuery {
     }
 
     @Override
-    public ResultSet getResultSet(Object... objects) throws SQLException {
+    public ResultSet getResult(Object... objects) throws SQLException {
         return this.database.getResult(this, objects);
     }
 

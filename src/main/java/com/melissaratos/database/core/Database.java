@@ -74,21 +74,17 @@ public class Database implements IDatabase {
 
     @Override
     public ResultSet getResult(IQuery iQuery, Object... objects) throws SQLException {
-        PreparedStatement statement = this.connection.prepareStatement(iQuery.build());
-        for(int i = 0; i < objects.length; i++)
-            statement.setObject(i + 1, objects[i]);
-        ResultSet result = statement.getResultSet();
-        statement.close();
-        return result;
+        PreparedStatement statement = (PreparedStatement) this.execute(iQuery, objects);
+        return statement.getResultSet();
     }
 
     @Override
-    public void execute(IQuery iQuery, Object... objects) throws SQLException {
+    public Statement execute(IQuery iQuery, Object... objects) throws SQLException {
         PreparedStatement statement = this.connection.prepareStatement(iQuery.build());
         for(int i = 0; i < objects.length; i++)
             statement.setObject(i + 1, objects[i]);
         statement.execute();
-        statement.close();
+        return statement;
     }
 
     @Override
