@@ -112,9 +112,9 @@ public class Database implements IDatabase {
             }
         }
         updateQuery.update(keys, values);
-        updateQuery.where((primaryKeys.get(0).getAnnotation(Column.class).name().equals("") ? primaryKeys.get(0).getName() : primaryKeys.get(0).getAnnotation(Column.class).name()) + "=" + primaryKeys.get(0).get(table));
+        updateQuery.where((primaryKeys.get(0).getAnnotation(Column.class).name().equals("") ? primaryKeys.get(0).getName() : primaryKeys.get(0).getAnnotation(Column.class).name()) + "=" + (primaryKeys.get(0).get(table) instanceof String ? "'" + primaryKeys.get(0).get(table) + "'" : primaryKeys.get(0).get(table)));
         for(int i = 1; i < primaryKeys.size(); i++)
-            updateQuery.where(IQuery.Logic.AND, (primaryKeys.get(i).getAnnotation(Column.class).name().equals("") ? primaryKeys.get(i).getName() : primaryKeys.get(i).getAnnotation(Column.class).name()) + "=" + primaryKeys.get(i).get(table));
+            updateQuery.where(IQuery.Logic.AND, (primaryKeys.get(i).getAnnotation(Column.class).name().equals("") ? primaryKeys.get(i).getName() : primaryKeys.get(i).getAnnotation(Column.class).name()) + "=" + (primaryKeys.get(0).get(table) instanceof String ? "'" + primaryKeys.get(0).get(table) + "'" : primaryKeys.get(0).get(table)));
 
         this.execute(updateQuery);
     }
