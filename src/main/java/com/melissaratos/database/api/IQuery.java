@@ -28,27 +28,51 @@ public interface IQuery {
 
     IQuery delete();
 
+    IQuery create(Engine engine, String[] columns, String... primaryKey);
+
     IQuery create(String[] columns, String... primaryKey);
+
+    IQuery create(Engine engine, String[] columns, List<String> primaryKey);
 
     IQuery create(String[] columns, List<String> primaryKey);
 
+    IQuery create(Engine engine, String[] columns, String[] types, String... primaryKey);
+
     IQuery create(String[] columns, String[] types, String... primaryKey);
+
+    IQuery create(Engine engine, String[] columns, String[] types, List<String> primaryKey);
 
     IQuery create(String[] columns, String[] types, List<String> primaryKey);
 
+    IQuery create(Engine engine, String[] columns, List<String> types, String... primaryKey);
+
     IQuery create(String[] columns, List<String> types, String... primaryKey);
+
+    IQuery create(Engine engine, String[] columns, List<String> types, List<String> primaryKey);
 
     IQuery create(String[] columns, List<String> types, List<String> primaryKey);
 
+    IQuery create(Engine engine, List<String>  columns, String... primaryKey);
+
     IQuery create(List<String>  columns, String... primaryKey);
+
+    IQuery create(Engine engine, List<String> columns, List<String> primaryKey);
 
     IQuery create(List<String> columns, List<String> primaryKey);
 
+    IQuery create(Engine engine, List<String> columns, String[] types, String... primaryKey);
+
     IQuery create(List<String> columns, String[] types, String... primaryKey);
+
+    IQuery create(Engine engine, List<String> columns, List<String> types, String... primaryKey);
 
     IQuery create(List<String> columns, List<String> types, String... primaryKey);
 
+    IQuery create(Engine engine, List<String> columns, String[] types, List<String> primaryKey);
+
     IQuery create(List<String> columns, String[] types, List<String> primaryKey);
+
+    IQuery create(Engine engine, List<String> columns, List<String> types, List<String> primaryKey);
 
     IQuery create(List<String> columns, List<String> types, List<String> primaryKey);
 

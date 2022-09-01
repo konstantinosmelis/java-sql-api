@@ -1,5 +1,6 @@
 package com.melissaratos.database.core;
 
+import com.melissaratos.database.api.Engine;
 import com.melissaratos.database.api.IDatabase;
 import com.melissaratos.database.api.IQuery;
 
@@ -32,7 +33,7 @@ public class Query implements IQuery {
 
     @Override
     public IQuery insertInto(String[] columns, Object... values) throws IllegalCallerException {
-        if(!this.queryIsEmpty())
+        if(this.isQueryEmpty())
             throw new IllegalCallerException();
         String vals = Arrays.stream(values).map(obj -> (obj instanceof String ? String.format("'%s'", obj) : String.valueOf(obj))).collect(Collectors.joining(", "));
         this.insert = "INSERT INTO " + this.table + " (" + String.join(",", columns) + ") VALUES (" + vals + ")";
@@ -56,7 +57,7 @@ public class Query implements IQuery {
 
     @Override
     public IQuery select(String... columns) throws IllegalCallerException {
-        if(!this.queryIsEmpty())
+        if(this.isQueryEmpty())
             throw new IllegalCallerException();
         this.select = String.format("SELECT %s FROM %s", String.join(", ", columns), this.table);
         return this;
@@ -69,7 +70,7 @@ public class Query implements IQuery {
 
     @Override
     public IQuery update(String[] columns, Object... values) throws IllegalCallerException {
-        if(!this.queryIsEmpty())
+        if(this.isQueryEmpty())
             throw new IllegalCallerException();
         if(columns.length != values.length)
             throw new IllegalArgumentException();
@@ -97,75 +98,135 @@ public class Query implements IQuery {
 
     @Override
     public IQuery delete() throws IllegalCallerException {
-        if(!this.queryIsEmpty())
+        if(this.isQueryEmpty())
             throw new IllegalCallerException();
         this.delete = String.format("DELETE FROM %s", this.table);
         return this;
     }
 
     @Override
-    public IQuery create(String[] columns, String... primaryKey) throws IllegalCallerException {
-        if(!this.queryIsEmpty())
+    public IQuery create(Engine engine, String[] columns, String... primaryKey) {
+        if(this.isQueryEmpty())
             throw new IllegalCallerException();
-        this.create = String.format("CREATE TABLE %s (%s, PRIMARY KEY (%s))", this.table, String.join(", ", columns), String.join(", ", primaryKey));
+        this.create = String.format("CREATE TABLE %s (%s, PRIMARY KEY (%s)) engine=%s", this.table, String.join(", ", columns), String.join(", ", primaryKey), engine);
         return this;
     }
 
     @Override
+    public IQuery create(String[] columns, String... primaryKey) throws IllegalCallerException {
+        return this.create(Engine.INNODB, columns, primaryKey);
+    }
+
+    @Override
+    public IQuery create(Engine engine, String[] columns, List<String> primaryKey) {
+        return this.create(engine, columns, primaryKey.toArray(new String[0]));
+    }
+
+    @Override
     public IQuery create(String[] columns, List<String> primaryKey) throws IllegalCallerException {
-        return this.create(columns, primaryKey.toArray(new String[0]));
+        return this.create(Engine.INNODB, columns, primaryKey.toArray(new String[0]));
+    }
+
+    @Override
+    public IQuery create(Engine engine, String[] columns, String[] types, String... primaryKey) {
+        String[] data = new String[columns.length];
+        for(int i = 0; i < columns.length; i++)
+            data[i] = String.format("%s %s", columns[i], types[i]);
+        return this.create(engine, data, primaryKey);
     }
 
     @Override
     public IQuery create(String[] columns, String[] types, String... primaryKey) throws IllegalCallerException {
-        String[] data = new String[columns.length];
-        for(int i = 0; i < columns.length; i++)
-            data[i] = String.format("%s %s", columns[i], types[i]);
-        return this.create(data, primaryKey);
+        return this.create(Engine.INNODB, columns, types, primaryKey);
+    }
+
+    @Override
+    public IQuery create(Engine engine, String[] columns, String[] types, List<String> primaryKey) throws IllegalCallerException {
+        return this.create(engine, columns, types, primaryKey.toArray(new String[0]));
     }
 
     @Override
     public IQuery create(String[] columns, String[] types, List<String> primaryKey) throws IllegalCallerException {
-        return this.create(columns, types, primaryKey.toArray(new String[0]));
+        return this.create(Engine.INNODB, columns, types, primaryKey);
+    }
+
+    @Override
+    public IQuery create(Engine engine, String[] columns, List<String> types, String... primaryKey) {
+        return this.create(engine, columns, types.toArray(new String[0]), primaryKey);
     }
 
     @Override
     public IQuery create(String[] columns, List<String> types, String... primaryKey) throws IllegalCallerException {
-        return this.create(columns, types.toArray(new String[0]), primaryKey);
+        return this.create(Engine.INNODB, columns, types, primaryKey);
+    }
+
+    @Override
+    public IQuery create(Engine engine, String[] columns, List<String> types, List<String> primaryKey) {
+        return this.create(engine, columns, types.toArray(new String[0]), primaryKey.toArray(new String[0]));
     }
 
     @Override
     public IQuery create(String[] columns, List<String> types, List<String> primaryKey) {
-        return this.create(columns, types.toArray(new String[0]), primaryKey.toArray(new String[0]));
+        return this.create(Engine.INNODB, columns, types, primaryKey);
+    }
+
+    @Override
+    public IQuery create(Engine engine, List<String> columns, String... primaryKey) {
+        return this.create(engine, columns.toArray(new String[0]), primaryKey);
     }
 
     @Override
     public IQuery create(List<String> columns, String... primaryKey) throws IllegalCallerException {
-        return this.create(columns.toArray(new String[0]), primaryKey);
+        return this.create(Engine.INNODB, columns, primaryKey);
+    }
+
+    @Override
+    public IQuery create(Engine engine, List<String> columns, List<String> primaryKey) {
+        return this.create(engine, columns.toArray(new String[0]), primaryKey.toArray(new String[0]));
     }
 
     public IQuery create(List<String> columns, List<String> primaryKey) throws IllegalCallerException {
-        return this.create(columns.toArray(new String[0]), primaryKey.toArray(new String[0]));
+        return this.create(Engine.INNODB, columns, primaryKey);
+    }
+
+    @Override
+    public IQuery create(Engine engine, List<String> columns, String[] types, String... primaryKey) {
+        return this.create(engine, columns.toArray(new String[0]), types, primaryKey);
     }
 
     @Override
     public IQuery create(List<String> columns, String[] types, String... primaryKey) throws IllegalCallerException {
-        return this.create(columns.toArray(new String[0]), types, primaryKey);
+        return this.create(Engine.INNODB, columns, types, primaryKey);
+    }
+
+    @Override
+    public IQuery create(Engine engine, List<String> columns, List<String> types, String... primaryKey) {
+        return this.create(engine, columns.toArray(new String[0]), types.toArray(new String[0]), primaryKey);
     }
 
     @Override
     public IQuery create(List<String> columns, List<String> types, String... primaryKey) throws IllegalCallerException {
-        return this.create(columns.toArray(new String[0]), types.toArray(new String[0]), primaryKey);
+        return this.create(Engine.INNODB, columns, types, primaryKey);
+    }
+
+    @Override
+    public IQuery create(Engine engine, List<String> columns, String[] types, List<String> primaryKey) {
+        return this.create(engine, columns.toArray(new String[0]), types, primaryKey.toArray(new String[0]));
     }
 
     @Override
     public IQuery create(List<String> columns, String[] types, List<String> primaryKey) {
-        return this.create(columns.toArray(new String[0]), types, primaryKey.toArray(new String[0]));
+        return this.create(Engine.INNODB, columns, types, primaryKey);
+    }
+
+    @Override
+    public IQuery create(Engine engine, List<String> columns, List<String> types, List<String> primaryKey) {
+        return this.create(engine, columns.toArray(new String[0]), types.toArray(new String[0]), primaryKey.toArray(new String[0]));
     }
 
     @Override
     public IQuery create(List<String> columns, List<String> types, List<String> primaryKey) {
-        return this.create(columns.toArray(new String[0]), types.toArray(new String[0]), primaryKey.toArray(new String[0]));
+        return this.create(Engine.INNODB, columns, types, primaryKey);
     }
 
     @Override
@@ -386,7 +447,7 @@ public class Query implements IQuery {
         return this.build();
     }
 
-    private boolean queryIsEmpty() {
-        return this.insert == null || this.select == null || this.update == null || this.delete == null;
+    private boolean isQueryEmpty() {
+        return this.insert != null && this.select != null && this.update != null && this.delete != null;
     }
 }

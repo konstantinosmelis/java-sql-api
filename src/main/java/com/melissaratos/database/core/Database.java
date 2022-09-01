@@ -133,7 +133,7 @@ public class Database implements IDatabase {
                 Column column = field.getAnnotation(Column.class);
                 String fieldName = (column.name().equals("") ? field.getName() : column.name());
                 columns.add(fieldName);
-                types.add(String.format("%s %s %s", column.type(), (column.nullable() ? "" : "NOT NULL"), (column.autoincrement() ? "AUTO_INCREMENT" : "")));
+                types.add(String.format("%s%s%s", column.type(), (column.nullable() ? "" : " NOT NULL"), (column.autoincrement() ? " AUTO_INCREMENT" : "")));
                 if(column.key() == Column.Key.PRIMARY)
                     primaryKey.add(fieldName);
             }
@@ -142,7 +142,7 @@ public class Database implements IDatabase {
         if(primaryKey.isEmpty())
             throw new MissingPrimaryKeyException("No primary key found for table " + (table.getClass().getAnnotation(Table.class).name().equals("") ? table.getClass().getSimpleName() : table.getClass().getAnnotation(Table.class).name()));
 
-        createQuery.create(columns, types, primaryKey);
+        createQuery.create(table.getClass().getAnnotation(Table.class).engine(), columns, types, primaryKey);
 
         this.execute(createQuery);
     }
